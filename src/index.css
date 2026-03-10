@@ -1,0 +1,202 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Kannada:wght@400;600;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 220 25% 97%;
+    --foreground: 220 25% 8%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 8%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 8%;
+    --primary: 152 68% 38%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 38 95% 54%;
+    --secondary-foreground: 220 25% 8%;
+    --muted: 220 18% 92%;
+    --muted-foreground: 220 12% 46%;
+    --accent: 152 45% 90%;
+    --accent-foreground: 152 68% 22%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 18% 88%;
+    --input: 220 18% 88%;
+    --ring: 152 68% 38%;
+    --radius: 0.875rem;
+    --danger: 0 84% 60%;
+    --danger-foreground: 0 0% 100%;
+    --warning: 38 95% 54%;
+    --warning-foreground: 220 25% 8%;
+    --success: 152 68% 38%;
+    --success-foreground: 0 0% 100%;
+    --sidebar-background: 220 25% 6%;
+    --sidebar-foreground: 220 15% 90%;
+    --sidebar-primary: 152 68% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 20% 12%;
+    --sidebar-accent-foreground: 220 15% 90%;
+    --sidebar-border: 220 18% 18%;
+    --sidebar-ring: 152 68% 50%;
+    --glow-primary: 152 68% 38%;
+    --glow-danger: 0 84% 60%;
+    --glow-warning: 38 95% 54%;
+  }
+
+  .dark {
+    --background: 222 28% 6%;
+    --foreground: 220 20% 95%;
+    --card: 222 24% 10%;
+    --card-foreground: 220 20% 95%;
+    --popover: 222 24% 10%;
+    --popover-foreground: 220 20% 95%;
+    --primary: 152 68% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 38 95% 54%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 222 20% 14%;
+    --muted-foreground: 220 12% 55%;
+    --accent: 152 30% 14%;
+    --accent-foreground: 152 68% 60%;
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 222 18% 16%;
+    --input: 222 18% 16%;
+    --ring: 152 68% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', 'Noto Sans Kannada', sans-serif;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-card/70 backdrop-blur-2xl border border-border/40;
+  }
+  .glass-strong {
+    @apply bg-card/90 backdrop-blur-3xl border border-border/50;
+    box-shadow: 0 8px 32px hsl(220 25% 8% / 0.08);
+  }
+  .gradient-primary {
+    background: linear-gradient(135deg, hsl(152, 68%, 38%), hsl(168, 72%, 32%));
+  }
+  .gradient-hero {
+    background: linear-gradient(135deg, hsl(152, 68%, 38%) 0%, hsl(200, 75%, 42%) 50%, hsl(168, 72%, 32%) 100%);
+  }
+  .gradient-danger {
+    background: linear-gradient(135deg, hsl(0, 84%, 60%), hsl(15, 80%, 50%));
+  }
+  .gradient-warning {
+    background: linear-gradient(135deg, hsl(38, 95%, 54%), hsl(25, 92%, 52%));
+  }
+  .gradient-dark {
+    background: linear-gradient(135deg, hsl(222, 28%, 8%), hsl(222, 24%, 14%));
+  }
+  .gradient-mesh {
+    background: 
+      radial-gradient(ellipse at 20% 50%, hsl(152, 68%, 38%, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, hsl(200, 75%, 42%, 0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 40% 80%, hsl(38, 95%, 54%, 0.04) 0%, transparent 50%);
+  }
+  .glow {
+    box-shadow: 0 0 40px hsl(var(--glow-primary) / 0.25), 0 0 80px hsl(var(--glow-primary) / 0.1);
+  }
+  .glow-danger {
+    box-shadow: 0 0 30px hsl(var(--glow-danger) / 0.3), 0 0 60px hsl(var(--glow-danger) / 0.1);
+  }
+  .glow-warning {
+    box-shadow: 0 0 30px hsl(var(--glow-warning) / 0.3);
+  }
+  .shadow-card {
+    box-shadow: 0 1px 3px hsl(220 25% 8% / 0.04), 0 8px 24px hsl(220 25% 8% / 0.06);
+  }
+  .shadow-elevated {
+    box-shadow: 0 4px 12px hsl(220 25% 8% / 0.06), 0 20px 48px hsl(220 25% 8% / 0.1);
+  }
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(152, 68%, 38%) 0%, hsl(200, 75%, 42%) 50%, hsl(168, 72%, 32%) 100%);
+  }
+  .text-gradient-warm {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(38, 95%, 54%), hsl(0, 84%, 60%));
+  }
+  .pulse-danger {
+    animation: pulseDanger 2s ease-in-out infinite;
+  }
+  .float {
+    animation: float 6s ease-in-out infinite;
+  }
+  .shimmer {
+    animation: shimmer 2.5s linear infinite;
+    background-size: 200% 100%;
+  }
+  .animate-glow-pulse {
+    animation: glowPulse 3s ease-in-out infinite;
+  }
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out both;
+  }
+  .animate-scale-in {
+    animation: scaleIn 0.4s ease-out both;
+  }
+}
+
+@keyframes pulseDanger {
+  0%, 100% { box-shadow: 0 0 0 0 hsl(0, 84%, 60%, 0.4); }
+  50% { box-shadow: 0 0 24px 8px hsl(0, 84%, 60%, 0.15); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  border-radius: var(--radius);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: hsl(var(--muted-foreground) / 0.3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.5); }
