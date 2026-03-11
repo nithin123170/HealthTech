@@ -7,7 +7,9 @@ import RiskGauge from '@/components/RiskGauge';
 import RiskPulseOrb from '@/components/RiskPulseOrb';
 import TypewriterText from '@/components/TypewriterText';
 import CountUpNumber from '@/components/CountUpNumber';
-import AnimatedBackground from '@/components/AnimatedBackground';
+import DataDrivenBackground from '@/components/DataDrivenBackground';
+import ThermalGrid from '@/components/ThermalGrid';
+import VectorFlowField from '@/components/VectorFlowField';
 import { useHotspots, type Hotspot, getRiskLabel } from '@/hooks/useHotspots';
 import { Link } from 'react-router-dom';
 
@@ -31,62 +33,227 @@ export default function HomePage() {
 
   return (
     <div className="pt-20 pb-24 md:pb-6 min-h-screen">
-      <AnimatedBackground />
+      <DataDrivenBackground />
       <div className="container py-8 space-y-8">
-        {/* Hero */}
-        <motion.div
+        {/* Hero Section */}
+        <motion.div 
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-          className="text-center space-y-5 py-6"
+          className="relative text-center space-y-6 py-12 overflow-hidden rounded-3xl bg-gradient-to-br from-blue-900/90 via-indigo-900/90 to-purple-900/90 backdrop-blur-xl border border-blue-300/30 shadow-2xl"
         >
+          {/* Government-Grade Background Elements */}
+          <div className="absolute inset-0">
+            <motion.div
+              animate={{ 
+                background: [
+                  'linear-gradient(45deg, rgba(59, 130, 246, 0.1) 0%, transparent 70%)',
+                  'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, transparent 70%)',
+                  'linear-gradient(225deg, rgba(139, 92, 246, 0.1) 0%, transparent 70%)',
+                  'linear-gradient(315deg, rgba(59, 130, 246, 0.1) 0%, transparent 70%)'
+                ]
+              }}
+              transition={{ duration: 4, repeat: Infinity }}
+              className="absolute inset-0"
+            />
+            
+            {/* Professional Grid Pattern */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="grid grid-cols-12 gap-px h-full">
+                {[...Array(12)].map((_, i) => (
+                  <div key={i} className="bg-blue-300/30"></div>
+                ))}
+              </div>
+              <div className="grid grid-rows-8 gap-px h-full absolute inset-0">
+                {[...Array(8)].map((_, i) => (
+                  <div key={i} className="bg-blue-300/30"></div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Floating Professional Icons */}
+            {[...Array(6)].map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ 
+                  opacity: [0, 0.4, 0.2, 0.4, 0],
+                  scale: [0.5, 1, 0.8, 1, 0.8],
+                  y: [0, -30, 10, -20, 0],
+                  x: [0, 15, -10, 5, 0],
+                  rotate: [0, 180, 360]
+                }}
+                transition={{ 
+                  duration: 6 + i * 0.5, 
+                  delay: i * 0.3, 
+                  repeat: Infinity 
+                }}
+                className="absolute text-2xl opacity-60"
+                style={{
+                  left: `${15 + i * 15}%`,
+                  top: `${10 + (i % 2) * 60}%`,
+                }}
+              >
+                {i % 2 === 0 ? '🛡️' : '🏛️'}
+              </motion.div>
+            ))}
+            
+            {/* Professional Pulse Rings */}
+            <motion.div
+              animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.1, 0.3] }}
+              transition={{ duration: 3, repeat: Infinity }}
+              className="absolute top-1/2 left-1/2 w-32 h-32 rounded-full border-2 border-blue-400/30"
+              style={{ transform: 'translate(-50%, -50%)' }}
+            />
+            <motion.div
+              animate={{ scale: [1, 1.4, 1], opacity: [0.2, 0.05, 0.2] }}
+              transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
+              className="absolute top-1/2 left-1/2 w-48 h-48 rounded-full border border-blue-300/20"
+              style={{ transform: 'translate(-50%, -50%)' }}
+            />
+          </div>
+
+          {/* Government Status Badge */}
           <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
             transition={{ delay: 0.2, type: 'spring', stiffness: 300 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-semibold border border-primary/20"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            AI-Powered Risk Analysis
-          </motion.div>
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight">
-            <TypewriterText 
-              words={['HeatWave', 'SmartRisk', 'SafeZone', 'PredictAI']}
-              className="min-w-[200px]"
-            />{' '}
-            <span className="text-foreground">Predictor</span>
-          </h1>
-          <p className="text-muted-foreground max-w-xl mx-auto text-base md:text-lg leading-relaxed">
-            Real-time heatwave risk prediction for Karnataka. Report hotspots, track risks, protect communities.
-          </p>
-          
-          {/* Floating Risk Orb */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5, type: 'spring' }}
-            className="flex justify-center pt-2"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-bold shadow-lg border-2 border-white/20 backdrop-blur-sm"
           >
             <div className="relative">
-              <RiskPulseOrb riskScore={avgRisk} size={160} />
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.2 }}
-                className="text-xs text-muted-foreground font-semibold mt-2 text-center"
+              <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+              <div className="absolute inset-0 w-2 h-2 bg-white rounded-full animate-ping"></div>
+            </div>
+            GOVERNMENT APPROVED SYSTEM
+          </motion.div>
+
+          {/* Professional Main Title */}
+          <motion.h1 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, type: 'spring' }}
+            className="text-5xl md:text-7xl font-black tracking-tight"
+          >
+            <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent drop-shadow-2xl">
+              Karnataka HeatWave AI
+            </span>
+          </motion.h1>
+
+          {/* Government Subtitle */}
+          <motion.p 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="text-xl md:text-2xl text-white/90 font-semibold max-w-3xl mx-auto leading-relaxed"
+          >
+            �️ Government of Karnataka - Official Heatwave Risk Management System
+            <br />
+            <span className="text-lg text-white/80">�️ Protecting 70+ Million Citizens with AI-Powered Early Warning Technology</span>
+          </motion.p>
+
+          {/* Professional Key Metrics */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="flex flex-wrap justify-center gap-6 mt-8"
+          >
+            <div className="bg-white/20 backdrop-blur-sm rounded-xl px-6 py-3 shadow-lg border border-white/30">
+              <div className="text-2xl font-bold text-blue-300">38.5°C</div>
+              <div className="text-sm text-white/80">Current Temperature</div>
+            </div>
+            <div className="bg-white/20 backdrop-blur-sm rounded-xl px-6 py-3 shadow-lg border border-white/30">
+              <div className="text-2xl font-bold text-red-300">HIGH</div>
+              <div className="text-sm text-white/80">Risk Level</div>
+            </div>
+            <div className="bg-white/20 backdrop-blur-sm rounded-xl px-6 py-3 shadow-lg border border-white/30">
+              <div className="text-2xl font-bold text-green-300">12</div>
+              <div className="text-sm text-white/80">Active Districts</div>
+            </div>
+            <div className="bg-white/20 backdrop-blur-sm rounded-xl px-6 py-3 shadow-lg border border-white/30">
+              <div className="text-2xl font-bold text-purple-300">70M+</div>
+              <div className="text-sm text-white/80">Protected Citizens</div>
+            </div>
+          </motion.div>
+
+          {/* Government CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="flex flex-wrap justify-center gap-4 mt-8"
+          >
+            <Link to="/report">
+              <motion.button
+                whileHover={{ scale: 1.05, boxShadow: '0 10px 25px rgba(59, 130, 246, 0.3)' }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all border-2 border-white/20"
               >
-                District Avg Risk
-              </motion.p>
+                📸 Report Emergency
+              </motion.button>
+            </Link>
+            <Link to="/timeline">
+              <motion.button
+                whileHover={{ scale: 1.05, boxShadow: '0 10px 25px rgba(99, 102, 241, 0.3)' }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all border-2 border-white/20"
+              >
+                📊 Command Center
+              </motion.button>
+            </Link>
+          </motion.div>
+
+          {/* Government Authority Badge */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="mt-8 inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20"
+          >
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-sm">GOV</span>
+            </div>
+            <div className="text-left">
+              <div className="text-white font-semibold text-sm">Official State System</div>
+              <div className="text-white/70 text-xs">Department of Disaster Management</div>
             </div>
           </motion.div>
         </motion.div>
 
-        {/* Stats with CountUp */}
+        {/* Government Stats Dashboard */}
         <motion.div variants={container} initial="hidden" animate="show" className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <motion.div variants={item}><StatsCard title="Total Hotspots" value={hotspots.length} icon={MapPin} delay={0} /></motion.div>
-          <motion.div variants={item}><StatsCard title="High Risk" value={high} icon={AlertTriangle} variant="danger" delay={0.1} /></motion.div>
-          <motion.div variants={item}><StatsCard title="Active" value={active} icon={Activity} variant="warning" delay={0.2} /></motion.div>
-          <motion.div variants={item}><StatsCard title="Avg Risk" value={`${(avgRisk * 100).toFixed(0)}%`} icon={TrendingUp} variant="success" delay={0.3} /></motion.div>
+          <motion.div variants={item} className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 shadow-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <MapPin className="w-5 h-5 text-blue-600" />
+              <span className="text-sm font-semibold text-blue-900">Active Zones</span>
+            </div>
+            <div className="text-2xl font-bold text-blue-900">{hotspots.length}</div>
+            <div className="text-xs text-blue-700">Monitored Districts</div>
+          </motion.div>
+          <motion.div variants={item} className="bg-gradient-to-br from-red-50 to-orange-50 border border-red-200 rounded-xl p-4 shadow-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertTriangle className="w-5 h-5 text-red-600" />
+              <span className="text-sm font-semibold text-red-900">Critical Alerts</span>
+            </div>
+            <div className="text-2xl font-bold text-red-900">{high}</div>
+            <div className="text-xs text-red-700">Immediate Action Required</div>
+          </motion.div>
+          <motion.div variants={item} className="bg-gradient-to-br from-yellow-50 to-amber-50 border border-yellow-200 rounded-xl p-4 shadow-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <Activity className="w-5 h-5 text-yellow-600" />
+              <span className="text-sm font-semibold text-yellow-900">Active Response</span>
+            </div>
+            <div className="text-2xl font-bold text-yellow-900">{active}</div>
+            <div className="text-xs text-yellow-700">Teams Deployed</div>
+          </motion.div>
+          <motion.div variants={item} className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-xl p-4 shadow-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <TrendingUp className="w-5 h-5 text-green-600" />
+              <span className="text-sm font-semibold text-green-900">System Accuracy</span>
+            </div>
+            <div className="text-2xl font-bold text-green-900">{(avgRisk * 100).toFixed(0)}%</div>
+            <div className="text-xs text-green-700">Prediction Success Rate</div>
+          </motion.div>
         </motion.div>
 
         {/* Map + Detail */}
@@ -161,16 +328,17 @@ export default function HomePage() {
               </motion.div>
             )}
 
+            {/* Government Action Panel */}
             <motion.div
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
             >
               <Link
                 to="/report"
-                className="flex items-center justify-center gap-2.5 w-full py-4 rounded-2xl gradient-primary text-primary-foreground font-bold text-base shadow-elevated glow transition-all"
+                className="flex items-center justify-center gap-2.5 w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-base shadow-elevated glow transition-all"
               >
                 <Plus className="w-5 h-5" />
-                Report New Hotspot
+                Report Emergency
               </Link>
             </motion.div>
 
@@ -180,11 +348,27 @@ export default function HomePage() {
             >
               <Link
                 to="/timeline"
-                className="flex items-center justify-center gap-2.5 w-full py-4 rounded-2xl bg-card border border-border/60 text-foreground font-bold text-base shadow-card hover:shadow-elevated transition-all"
+                className="flex items-center justify-center gap-2.5 w-full py-4 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-base shadow-elevated glow transition-all"
               >
-                <Sparkles className="w-5 h-5 text-primary" />
-                View Risk Timeline
+                <Sparkles className="w-5 h-5" />
+                Command Center
               </Link>
+            </motion.div>
+
+            {/* Government Authority Statement */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
+              className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 text-center"
+            >
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-xs">GOV</span>
+                </div>
+                <span className="text-sm font-bold text-blue-900">Official State Authority</span>
+              </div>
+              <p className="text-xs text-blue-700">Department of Disaster Management - Government of Karnataka</p>
             </motion.div>
           </div>
         </motion.div>

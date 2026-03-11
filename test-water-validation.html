@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Image Validation Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .result {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        img {
+            max-width: 300px;
+            max-height: 200px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        input[type="file"] {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Water Image Validation Test</h1>
+    <p>Upload your water images here to test if they pass validation without errors.</p>
+
+    <div class="test-container">
+        <h2>Test Your Water Images</h2>
+        <input type="file" id="fileInput" accept="image/*" multiple>
+        <button onclick="testSelectedImages()">Test Images</button>
+        <div id="results"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Test Sample URLs</h2>
+        <input type="text" id="urlInput" placeholder="Enter image URL" style="width: 100%; padding: 10px; margin: 10px 0;">
+        <button onclick="testImageUrl()">Test URL</button>
+        <div id="urlResult"></div>
+    </div>
+
+    <script>
+        // HuggingFace Inference API
+        const HF_API_URL = 'https://api-inference.huggingface.co/models/openai/clip-vit-base-patch32';
+
+        function toBase64Jpeg(img) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 224;
+            canvas.height = 224;
+            canvas.getContext('2d').drawImage(img, 0, 0, 224, 224);
+            return canvas.toDataURL('image/jpeg', 0.85);
+        }
+
+        async function validateWaterImage(imageElement) {
+            const dataUrl = toBase64Jpeg(imageElement);
+            
+            const WATER_LABEL = 'water, river, lake, pond, flood, stagnant water, waterway, puddle, drain, stream';
+            const OTHER_LABEL = 'people, animals, buildings, documents, food, roads, cars, furniture';
+
+            const callApi = async () => {
+                return fetch(HF_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        inputs: {
+                            image: dataUrl.split(',')[1],
+                            candidate_labels: [WATER_LABEL, OTHER_LABEL],
+                        },
+                    }),
+                });
+            };
+
+            let response = await callApi();
+
+            if (response.status === 503) {
+                console.log('Model loading, retrying...');
+                await new Promise(r => setTimeout(r, 3000));
+                response = await callApi();
+            }
+
+            if (!response.ok) {
+                const errText = await response.text();
+                console.warn(`API error ${response.status}: ${errText}`);
+                return {
+                    isWater: true,
+                    reason: `API unavailable (${response.status}) - allowing upload`,
+                };
+            }
+
+            try {
+                const data = await response.json();
+                const waterResult = data.find(d => d.label === WATER_LABEL);
+                const waterScore = waterResult?.score ?? 0;
+                const isWater = waterScore >= 0.25;
+
+                return {
+                    isWater,
+                    reason: isWater
+                        ? `Water detected (score: ${(waterScore * 100).toFixed(0)}%)`
+                        : `No water detected (water score: ${(waterScore * 100).toFixed(0)}%)`,
+                };
+            } catch (parseError) {
+                console.warn('Failed to parse response:', parseError);
+                return {
+                    isWater: true,
+                    reason: 'Response parsing failed - allowing upload',
+                };
+            }
+        }
+
+        async function testSingleImage(file, index) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = async () => {
+                    const img = new Image();
+                    img.onload = async () => {
+                        const result = await validateWaterImage(img);
+                        resolve({ file: file.name, result, img });
+                    };
+                    img.src = reader.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function testSelectedImages() {
+            const fileInput = document.getElementById('fileInput');
+            const resultsDiv = document.getElementById('results');
+            const files = Array.from(fileInput.files);
+
+            if (files.length === 0) {
+                alert('Please select images first!');
+                return;
+            }
+
+            resultsDiv.innerHTML = '<h3>Testing...</h3>';
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const { result, img } = await testSingleImage(file, i);
+
+                const resultDiv = document.createElement('div');
+                resultDiv.className = `result ${result.isWater ? 'success' : 'error'}`;
+                
+                resultDiv.innerHTML = `
+                    <h4>📁 ${file.name}</h4>
+                    <img src="${img.src}" alt="Test image">
+                    <p><strong>Result:</strong> ${result.isWater ? '✅ ACCEPTED' : '❌ REJECTED'}</p>
+                    <p><strong>Reason:</strong> ${result.reason}</p>
+                `;
+
+                resultsDiv.appendChild(resultDiv);
+            }
+        }
+
+        async function testImageUrl() {
+            const urlInput = document.getElementById('urlInput');
+            const urlResult = document.getElementById('urlResult');
+            const url = urlInput.value.trim();
+
+            if (!url) {
+                alert('Please enter an image URL!');
+                return;
+            }
+
+            urlResult.innerHTML = '<h3>Testing URL...</h3>';
+
+            try {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                
+                await new Promise((resolve, reject) => {
+                    img.onload = resolve;
+                    img.onerror = reject;
+                    img.src = url;
+                });
+
+                const result = await validateWaterImage(img);
+
+                const resultDiv = document.createElement('div');
+                resultDiv.className = `result ${result.isWater ? 'success' : 'error'}`;
+                
+                resultDiv.innerHTML = `
+                    <h4>🌐 ${url}</h4>
+                    <img src="${url}" alt="Test image" style="max-width: 300px;">
+                    <p><strong>Result:</strong> ${result.isWater ? '✅ ACCEPTED' : '❌ REJECTED'}</p>
+                    <p><strong>Reason:</strong> ${result.reason}</p>
+                `;
+
+                urlResult.innerHTML = '';
+                urlResult.appendChild(resultDiv);
+
+            } catch (error) {
+                urlResult.innerHTML = `
+                    <div class="error">
+                        <h4>💥 Error</h4>
+                        <p>Failed to load or test image: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
